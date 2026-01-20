@@ -19,7 +19,7 @@ public class ImageEditor {
 			}
 			
 			String inputFile = args[0];
-			String outputFile = args[1];
+			String outputFile = args[1]; 
 			String filter = args[2];
 
 			Image image = read(inputFile);
