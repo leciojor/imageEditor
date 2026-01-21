@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 type Color = {
     red: number,
@@ -53,7 +53,19 @@ function read(inFile: string): Image {
 }
 
 function write(image: Image, outFile: string){
-    return;
+    const width = image.width;
+    const height = image.height;
+    let imageText: string = `P3 ${width} ${height} 255 `
+    
+    let i = 4
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+            const pixel = image.pixels![x]![y]!;
+            imageText = imageText + `${pixel.red}${pixel.green}${pixel.blue} `;
+        } 
+    }
+
+    writeFileSync(outFile, imageText, 'utf-8');
 }
 
 function montionBlur(image: Image, lenght: number){
@@ -67,11 +79,11 @@ function montionBlur(image: Image, lenght: number){
 
     for (let x = 0; x < image['width']; x++) {
         for (let y = 0; y < image['height']; y++) {
-            curColor = pixels?[x][y];
+            curColor = pixels![x]![y]!;
             
             const maxX = Math.min(image['width'] - 1, x + length - 1);
             for (let i = x + 1; i <= maxX; i++) {
-                tmpColor = pixels?[i][y];
+                tmpColor = pixels![i]![y]!;
                 curColor.red += tmpColor.red;
                 curColor.green += tmpColor.green;
                 curColor.blue += tmpColor.blue;
@@ -86,11 +98,32 @@ function montionBlur(image: Image, lenght: number){
 }
 
 function invert(image: Image){
-    return;
+    let curColor: Color;
+    for (let x = 0; x < image['width']; x++) {
+        for (let y = 0; y < image['height']; y++) {
+            curColor = image.pixels![x]![y]!;
+            curColor.red = 255 - curColor.red;
+            curColor.green = 255 - curColor.green;
+            curColor.blue = 255 - curColor.blue;
+        }
+    }
 }
 
 function grayscale(image: Image){
-    return;
+    let curColor: Color;
+    let grayLevel: number;
+    for (let x = 0; x < image['width']; x++) {
+        for (let y = 0; y < image['height']; y++) {
+            curColor = image.pixels![x]![y]!;
+                            
+            grayLevel = (curColor.red + curColor.green + curColor.blue) / 3;
+            grayLevel = Math.max(0, Math.min(grayLevel, 255));
+            
+            curColor.red = grayLevel;
+            curColor.green = grayLevel;
+            curColor.blue = grayLevel;
+        }
+    }
 } 
 
 function emboss(image: Image){
