@@ -35,12 +35,13 @@ function read(inFile) {
 function write(image, outFile) {
     const width = image.width;
     const height = image.height;
-    let imageText = `P3 \n${width} ${height}\n255 \n`;
+    let imageText = `P3\n${width} ${height}\n255\n`;
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const pixel = image.pixels[x][y];
-            imageText = imageText + `${pixel.red} ${pixel.green} ${pixel.blue} \n`;
+            imageText += `${x === 0 ? '' : ' '}${pixel.red} ${pixel.green} ${pixel.blue}`;
         }
+        imageText += '\n';
     }
     (0, fs_1.writeFileSync)(outFile, imageText, 'utf-8');
 }
