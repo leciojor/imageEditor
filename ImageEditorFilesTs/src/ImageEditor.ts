@@ -13,7 +13,7 @@ type Image = {
 } 
 
 function usage(){
-    console.log("USAGE: npm run start -- <in-file> -- <out-file> -- <grayscale|invert|emboss|motionblur> -- {motion-blur-length}");
+    console.log("USAGE: npm run start -- <in-file> <out-file> <grayscale|invert|emboss|motionblur> {motion-blur-length}");
 }
 
 function read(inFile: string): Image {
@@ -37,14 +37,13 @@ function read(inFile: string): Image {
     }
 
     let i = 4
-    for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
             const r = Math.round((parseInt(tokens[i++]!) / max) * 255);
             const g = Math.round((parseInt(tokens[i++]!) / max) * 255);
             const b = Math.round((parseInt(tokens[i++]!) / max) * 255);
-            let row = pixels[x];
-            row?.push({ red: r, green: g, blue: b });
-        } 
+            pixels[x]?.push({ red: r, green: g, blue: b });
+        }
     }
 
     let image: Image = {pixels:pixels, height: height, width: width};
@@ -55,16 +54,15 @@ function read(inFile: string): Image {
 function write(image: Image, outFile: string){
     const width = image.width;
     const height = image.height;
-    let imageText: string = `P3 ${width} ${height} 255 `
+    let imageText: string = `P3\n${width} ${height}\n255\n`
     
-    let i = 4
-    for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
-            const pixel = image.pixels![x]![y]!;
-            imageText = imageText + `${pixel.red}${pixel.green}${pixel.blue} `;
-        } 
+    for (let y = 0; y < height; y++) {
+       for (let x = 0; x < width; x++) {
+           const pixel = image.pixels![x]![y]!;
+           imageText += `${x === 0 ? '' : ' '}${pixel.red} ${pixel.green} ${pixel.blue}`;
+       }
+       imageText += '\n';
     }
-
     writeFileSync(outFile, imageText, 'utf-8');
 }
 
@@ -129,10 +127,11 @@ function grayscale(image: Image){
 function emboss(image: Image){
     let curColor: Color;
     let upLeftColor: Color;
-    let diff: number = 0;
+    let diff: number;
     let grayLevel: number;
     for (let x = image['width'] - 1; x >= 0; x--) {
         for (let y = image['height'] - 1; y >= 0; y--) {
+            diff = 0;
             curColor = image.pixels![x]![y]!;
             
             if (x > 0 && y > 0) {
@@ -162,10 +161,9 @@ function run(args: string[]) {
     const [inFile, outFile, filter, motionBlurLength] = args;
 
     if (!inFile || !outFile || !filter){
-    usage()
-    return;
+        usage()
+        return;
     }
-
     let image: Image = read(inFile);
 
     if (filter == "grayscale" || filter == "greyscale") {

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 function usage() {
-    console.log("USAGE: npm run start -- <in-file> -- <out-file> -- <grayscale|invert|emboss|motionblur> -- {motion-blur-length}");
+    console.log("USAGE: npm run start -- <in-file> <out-file> <grayscale|invert|emboss|motionblur> {motion-blur-length}");
 }
 function read(inFile) {
     const content = (0, fs_1.readFileSync)(inFile, "utf8");
@@ -21,13 +21,12 @@ function read(inFile) {
         pixels.push([]);
     }
     let i = 4;
-    for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
             const r = Math.round((parseInt(tokens[i++]) / max) * 255);
             const g = Math.round((parseInt(tokens[i++]) / max) * 255);
             const b = Math.round((parseInt(tokens[i++]) / max) * 255);
-            let row = pixels[x];
-            row?.push({ red: r, green: g, blue: b });
+            pixels[x]?.push({ red: r, green: g, blue: b });
         }
     }
     let image = { pixels: pixels, height: height, width: width };
@@ -36,12 +35,11 @@ function read(inFile) {
 function write(image, outFile) {
     const width = image.width;
     const height = image.height;
-    let imageText = `P3 ${width} ${height} 255 `;
-    let i = 4;
-    for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
+    let imageText = `P3 \n${width} ${height}\n255 \n`;
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
             const pixel = image.pixels[x][y];
-            imageText = imageText + `${pixel.red}${pixel.green}${pixel.blue} `;
+            imageText = imageText + `${pixel.red} ${pixel.green} ${pixel.blue} \n`;
         }
     }
     (0, fs_1.writeFileSync)(outFile, imageText, 'utf-8');
@@ -98,10 +96,11 @@ function grayscale(image) {
 function emboss(image) {
     let curColor;
     let upLeftColor;
-    let diff = 0;
+    let diff;
     let grayLevel;
     for (let x = image['width'] - 1; x >= 0; x--) {
         for (let y = image['height'] - 1; y >= 0; y--) {
+            diff = 0;
             curColor = image.pixels[x][y];
             if (x > 0 && y > 0) {
                 upLeftColor = image.pixels[x - 1][y - 1];
