@@ -54,15 +54,19 @@ function read(inFile: string): Image {
 function write(image: Image, outFile: string){
     const width = image.width;
     const height = image.height;
-    let imageText: string = `P3\n${width} ${height}\n255\n`
+    let imageText: string = `P3\n${width} ${height}\n255\n`;
     
     for (let y = 0; y < height; y++) {
-       for (let x = 0; x < width; x++) {
-           const pixel = image.pixels![x]![y]!;
-           imageText += `${x === 0 ? '' : ' '}${pixel.red} ${pixel.green} ${pixel.blue}`;
-       }
-       imageText += '\n';
+        for (let x = 0; x < width; x++) {
+            const pixel = image.pixels![x]![y]!;
+            if (x > 0) {
+                imageText += ' ';
+            }
+            imageText += `${pixel.red} ${pixel.green} ${pixel.blue}`;
+        }
+        imageText += '\n';
     }
+    
     writeFileSync(outFile, imageText, 'utf-8');
 }
 
@@ -88,9 +92,9 @@ function montionBlur(image: Image, lenght: number){
             }
 
             const delta = (maxX - x + 1);
-            curColor.red /= delta;
-            curColor.green /= delta;
-            curColor.blue /= delta;
+            curColor.red = Math.floor(curColor.red / delta);
+            curColor.green = Math.floor(curColor.green / delta);
+            curColor.blue = Math.floor(curColor.blue / delta);        
         }
     }
 }
@@ -114,7 +118,7 @@ function grayscale(image: Image){
         for (let y = 0; y < image['height']; y++) {
             curColor = image.pixels![x]![y]!;
                             
-            grayLevel = (curColor.red + curColor.green + curColor.blue) / 3;
+            grayLevel = Math.floor((curColor.red + curColor.green + curColor.blue) / 3);
             grayLevel = Math.max(0, Math.min(grayLevel, 255));
             
             curColor.red = grayLevel;
@@ -147,7 +151,7 @@ function emboss(image: Image){
                 }
             }
             
-            grayLevel = (128 + diff);
+            grayLevel = Math.round(128 + diff);
             grayLevel = Math.max(0, Math.min(grayLevel, 255));
             
             curColor.red = grayLevel;

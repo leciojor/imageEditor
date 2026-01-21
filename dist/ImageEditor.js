@@ -39,7 +39,10 @@ function write(image, outFile) {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const pixel = image.pixels[x][y];
-            imageText += `${x === 0 ? '' : ' '}${pixel.red} ${pixel.green} ${pixel.blue}`;
+            if (x > 0) {
+                imageText += ' ';
+            }
+            imageText += `${pixel.red} ${pixel.green} ${pixel.blue}`;
         }
         imageText += '\n';
     }
@@ -63,9 +66,9 @@ function montionBlur(image, lenght) {
                 curColor.blue += tmpColor.blue;
             }
             const delta = (maxX - x + 1);
-            curColor.red /= delta;
-            curColor.green /= delta;
-            curColor.blue /= delta;
+            curColor.red = Math.floor(curColor.red / delta);
+            curColor.green = Math.floor(curColor.green / delta);
+            curColor.blue = Math.floor(curColor.blue / delta);
         }
     }
 }
@@ -86,7 +89,7 @@ function grayscale(image) {
     for (let x = 0; x < image['width']; x++) {
         for (let y = 0; y < image['height']; y++) {
             curColor = image.pixels[x][y];
-            grayLevel = (curColor.red + curColor.green + curColor.blue) / 3;
+            grayLevel = Math.floor((curColor.red + curColor.green + curColor.blue) / 3);
             grayLevel = Math.max(0, Math.min(grayLevel, 255));
             curColor.red = grayLevel;
             curColor.green = grayLevel;
@@ -115,7 +118,7 @@ function emboss(image) {
                     diff = curColor.blue - upLeftColor.blue;
                 }
             }
-            grayLevel = (128 + diff);
+            grayLevel = Math.round(128 + diff);
             grayLevel = Math.max(0, Math.min(grayLevel, 255));
             curColor.red = grayLevel;
             curColor.green = grayLevel;

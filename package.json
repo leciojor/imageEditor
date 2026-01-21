@@ -4,9 +4,39 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/ImageEditor.js"
+    "start": "node dist/ImageEditor.js",
+    "both": "npm run build && npm run start",
+    "prepare-test": "if not exist ImageEditorFilesJava\\curr_results mkdir ImageEditorFilesJava\\curr_results",
+    "test:all": "npm run build && npm run prepare-test && npm run test:grayscale && npm run test:invert && npm run test:emboss && npm run test:motionblur",
+    
+    "test:grayscale": "npm run test:grayscale:feep && npm run test:grayscale:penguins && npm run test:grayscale:sunset && npm run test:grayscale:tiny && npm run test:grayscale:simply",
+    "test:grayscale:simply": "npm run start ImageEditorFilesJava/source_images/one-does-not-simply.ppm ImageEditorFilesJava/curr_results/grayscale-one-does-not-simply.ppm grayscale",
+    "test:grayscale:feep": "npm run start ImageEditorFilesJava/source_images/feep.ppm ImageEditorFilesJava/curr_results/grayscale-feep.ppm grayscale",
+    "test:grayscale:penguins": "npm run start ImageEditorFilesJava/source_images/Penguins.ppm ImageEditorFilesJava/curr_results/grayscale-Penguins.ppm grayscale",
+    "test:grayscale:sunset": "npm run start ImageEditorFilesJava/source_images/sunset.ppm ImageEditorFilesJava/curr_results/grayscale-sunset.ppm grayscale",
+    "test:grayscale:tiny": "npm run start ImageEditorFilesJava/source_images/tiny.ppm ImageEditorFilesJava/curr_results/grayscale-tiny.ppm grayscale",
+    
+    "test:invert": "npm run test:invert:feep && npm run test:invert:penguins && npm run test:invert:sunset && npm run test:invert:tiny && npm run test:invert:simply",
+    "test:invert:simply": "npm run start ImageEditorFilesJava/source_images/one-does-not-simply.ppm ImageEditorFilesJava/curr_results/invert-one-does-not-simply.ppm invert",
+    "test:invert:feep": "npm run start ImageEditorFilesJava/source_images/feep.ppm ImageEditorFilesJava/curr_results/invert-feep.ppm invert",
+    "test:invert:penguins": "npm run start ImageEditorFilesJava/source_images/Penguins.ppm ImageEditorFilesJava/curr_results/invert-Penguins.ppm invert",
+    "test:invert:sunset": "npm run start ImageEditorFilesJava/source_images/sunset.ppm ImageEditorFilesJava/curr_results/invert-sunset.ppm invert",
+    "test:invert:tiny": "npm run start ImageEditorFilesJava/source_images/tiny.ppm ImageEditorFilesJava/curr_results/invert-tiny.ppm invert",
+    
+    "test:emboss": "npm run test:emboss:feep && npm run test:emboss:penguins && npm run test:emboss:sunset && npm run test:emboss:tiny && npm run test:emboss:simply",
+    "test:emboss:simply": "npm run start ImageEditorFilesJava/source_images/one-does-not-simply.ppm ImageEditorFilesJava/curr_results/emboss-one-does-not-simply.ppm emboss",
+    "test:emboss:feep": "npm run start ImageEditorFilesJava/source_images/feep.ppm ImageEditorFilesJava/curr_results/emboss-feep.ppm emboss",
+    "test:emboss:penguins": "npm run start ImageEditorFilesJava/source_images/Penguins.ppm ImageEditorFilesJava/curr_results/emboss-Penguins.ppm emboss",
+    "test:emboss:sunset": "npm run start ImageEditorFilesJava/source_images/sunset.ppm ImageEditorFilesJava/curr_results/emboss-sunset.ppm emboss",
+    "test:emboss:tiny": "npm run start ImageEditorFilesJava/source_images/tiny.ppm ImageEditorFilesJava/curr_results/emboss-tiny.ppm emboss",
+    
+    "test:motionblur": "npm run test:motionblur:feep && npm run test:motionblur:penguins && npm run test:motionblur:sunset && npm run test:motionblur:tiny && npm run test:motionblur:simply",
+    "test:motionblur:simply": "npm run start ImageEditorFilesJava/source_images/one-does-not-simply.ppm ImageEditorFilesJava/curr_results/motionblur-one-does-not-simply.ppm motionblur 10",
+    "test:motionblur:feep": "npm run start ImageEditorFilesJava/source_images/feep.ppm ImageEditorFilesJava/curr_results/motionblur-feep.ppm motionblur 10",
+    "test:motionblur:penguins": "npm run start ImageEditorFilesJava/source_images/Penguins.ppm ImageEditorFilesJava/curr_results/motionblur-Penguins.ppm motionblur 10",
+    "test:motionblur:sunset": "npm run start ImageEditorFilesJava/source_images/sunset.ppm ImageEditorFilesJava/curr_results/motionblur-sunset.ppm motionblur 10",
+    "test:motionblur:tiny": "npm run start ImageEditorFilesJava/source_images/tiny.ppm ImageEditorFilesJava/curr_results/motionblur-tiny.ppm motionblur 10"
   },
   "keywords": [],
   "author": "",
